@@ -210,7 +210,7 @@
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSDate *dateString = [formatter dateFromString:departureTime];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZ"];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZ"];//'T'
     NSString *time = [formatter stringFromDate:dateString];
     
     if ([dateString compare:[NSDate date]] == NSOrderedAscending) {
@@ -226,7 +226,7 @@
     
     [[[RKObjectManager sharedManager] HTTPClient] setDefaultHeader:@"apiKey" value:[[CurrentUser sharedInstance] user].apiKey];
     
-    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v2/users/%@/rides/%@", [CurrentUser sharedInstance].user.userId, self.ride.rideId] parameters:rideParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+    [objectManager putObject:nil path:[NSString stringWithFormat:@"/api/v3/users/%@/rides/%@", [CurrentUser sharedInstance].user.userId, self.ride.rideId] parameters:rideParams success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         
         self.tablePassengerValues = nil;
         [KGStatusBar showSuccessWithStatus:@"Request saved"];

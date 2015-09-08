@@ -16,6 +16,16 @@
     [alert show];
 }
 
++ (UIAlertView *) createPleaseWaitAlertView {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Loading" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles: nil];
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [indicator startAnimating];
+    
+    [alertView setValue:indicator forKey:@"accessoryView"];
+    return alertView;
+}
+
 #pragma mark - image handling
 // explanation: stackoverflow.com/questions/3514066/how-to-tint-a-transparent-png-image-in-iphone
 + (UIImage *)colorImage:(UIImage *)origImage withColor:(UIColor *)color {
@@ -125,6 +135,7 @@
 
 + (NSString *)stringFromDate:(NSDate*)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *stringFromDate = [formatter stringFromDate:date];
@@ -133,14 +144,17 @@
 
 + (NSString *)timeStringFromDate:(NSDate*)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     [formatter setDateFormat:@"HH:mm"];
-    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
+    NSLog(@"<y< timezone: %@", formatter.timeZone);
+//    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *stringFromDate = [formatter stringFromDate:date];
     return stringFromDate;
 }
 
 + (NSString *)dateStringFromDate:(NSDate*)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     [formatter setDateFormat:@"yyyy-MM-dd"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *stringFromDate = [formatter stringFromDate:date];
@@ -149,7 +163,8 @@
 
 + (NSString *)webserviceStringFromDate:(NSDate *)date {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZZZZ"]; //'T' from timestring removed
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSString *time = [formatter stringFromDate:date];
     return time;
@@ -157,6 +172,7 @@
 
 + (NSDate *)dateFromString:(NSString *)stringDate {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    [formatter setTimeZone:[NSTimeZone localTimeZone]];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"de_DE"]];
     NSDate *date = [formatter dateFromString:stringDate];
@@ -167,8 +183,8 @@
     
     NSDate* sourceDate = [NSDate date];
     
-    NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-    NSTimeZone* destinationTimeZone = [NSTimeZone systemTimeZone];
+    NSTimeZone* sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+    NSTimeZone* destinationTimeZone = [NSTimeZone localTimeZone];
     
     NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
     NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];

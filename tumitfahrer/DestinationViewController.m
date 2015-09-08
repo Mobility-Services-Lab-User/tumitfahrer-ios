@@ -41,6 +41,8 @@
     self.searchBar.placeholder = @"Search Address";
     self.searchBar.tintColor = [UIColor blueColor];
     
+
+    
 #ifdef DEBUG
     [self.searchBar setAccessibilityLabel:@"Search Bar"];
     [self.searchBar setIsAccessibilityElement:YES];
@@ -60,6 +62,10 @@
     self.view.backgroundColor = [UIColor customLightGray];
 }
 
+-(void) viewDidAppear:(BOOL)animated {
+    
+}
+
 -(void)saveButtonPressed {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -71,7 +77,7 @@
     if (section == 0) {
         return [self.predefinedDestinations count];
     } else
-        return [searchResultPlaces count] + 8;
+        return [searchResultPlaces count] ;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -154,12 +160,12 @@
 #pragma mark UISearchDisplayDelegate
 
 - (void)handleSearchForSearchString:(NSString *)searchString {
-    
+//    NSLog(@"<<<LOC: lat:%f   long:%f",[[LocationController sharedInstance] currentLocation].coordinate.latitude, [[LocationController sharedInstance] currentLocation].coordinate.longitude);
     searchQuery.input = searchString;
     searchQuery.location = [[LocationController sharedInstance] currentLocation].coordinate ;
     searchQuery.types = SPPlaceTypeGeocode; // Only return geocoding (address) results.
     searchQuery.radius = 100.0;
-    searchQuery.language = @"en";
+    searchQuery.language = @"de";
     [searchQuery fetchPlaces:^(NSArray *places, NSError *error) {
         if (error) {
             SPPresentAlertViewWithErrorAndTitle(error, @"Could not fetch Places");
@@ -175,18 +181,26 @@
 #pragma mark UISearchBar Delegate
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    [self handleSearchForSearchString:searchText];
+    if(searchText.length==0){
+        searchResultPlaces = [[NSArray alloc] initWithObjects:nil];
+        [self.tableView reloadData];
+    } else {
+        [self handleSearchForSearchString:searchText];
+    }
 }
 
 -(BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    [self.searchBar setShowsCancelButton:YES animated:YES];
+    [self.searchBar setShowsCancelButton:NO animated:YES];
     return YES;
 }
 
--(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [self.searchBar setShowsCancelButton:NO animated:YES];
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
     [self.searchBar resignFirstResponder];
+    // Do the search...
 }
+
+
 
 -(void)dealloc {
     self.delegate = nil;

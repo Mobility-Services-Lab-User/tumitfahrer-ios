@@ -78,7 +78,7 @@
     editButton.frame = CGRectMake(220, 25, 30, 30);
     [editButton setImage:[UIImage imageNamed:@"EditIcon"] forState:UIControlStateNormal];
     [editButton addTarget:self action:@selector(editButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:editButton];
+//    [self.view addSubview:editButton];
     
     self.rideDetail.shouldDisplayGradient = YES;
     self.view.backgroundColor = [UIColor customLightGray];
@@ -172,6 +172,7 @@
 -(void)initFields {
     self.rideDetail.departureLabel.text = self.ride.departurePlace;
     self.rideDetail.destinationLabel.text = self.ride.destination;
+    NSLog(@"<y<initFields time %@", self.ride.departureTime);
     self.rideDetail.timeLabel.text = [ActionManager timeStringFromDate:self.ride.departureTime];
     self.rideDetail.calendarLabel.text = [ActionManager dateStringFromDate:self.ride.departureTime];
 }
